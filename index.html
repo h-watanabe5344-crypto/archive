@@ -1,0 +1,330 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f3f1ec">
+  <title>アーカイブサイト</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --paper: #f3f1ec;
+      --ink: #1d1d1b;
+      --muted: #77766f;
+      --rule: #d4d1c9;
+      --gutter: clamp(20px, 5vw, 76px);
+    }
+
+    * { box-sizing: border-box; }
+
+    html { background: var(--paper); }
+
+    body {
+      margin: 0;
+      color: var(--ink);
+      background: var(--paper);
+      font-family: -apple-system, BlinkMacSystemFont, "Hiragino Kaku Gothic ProN", "Yu Gothic", Meiryo, sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .page {
+      width: min(100%, 1600px);
+      margin-inline: auto;
+      padding: 0 var(--gutter) 72px;
+    }
+
+    .masthead {
+      min-height: 58px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--rule);
+      color: var(--muted);
+      font-size: 11px;
+      letter-spacing: .12em;
+    }
+
+    .masthead span:last-child { font-variant-numeric: tabular-nums; }
+
+    .intro {
+      padding: clamp(48px, 9vw, 128px) 0 clamp(42px, 7vw, 92px);
+      border-bottom: 1px solid var(--rule);
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(40px, 8vw, 106px);
+      font-weight: 500;
+      letter-spacing: -.055em;
+      line-height: 1.12;
+    }
+
+    .collection {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      column-gap: clamp(18px, 3.2vw, 48px);
+      row-gap: clamp(44px, 7vw, 96px);
+      padding-top: clamp(28px, 4.5vw, 64px);
+    }
+
+    .item { min-width: 0; }
+
+    .photo-button {
+      display: block;
+      width: 100%;
+      padding: 0;
+      overflow: hidden;
+      border: 0;
+      background: #111;
+      cursor: zoom-in;
+    }
+
+    .photo-button img {
+      display: block;
+      width: 100%;
+      height: auto;
+      transition: transform 500ms cubic-bezier(.2,.7,.2,1);
+    }
+
+    .photo-button:hover img,
+    .photo-button:focus-visible img { transform: scale(1.018); }
+
+    .photo-button:focus-visible,
+    .close:focus-visible {
+      outline: 2px solid #8d7653;
+      outline-offset: 4px;
+    }
+
+    .caption {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 16px;
+      padding-top: 14px;
+    }
+
+    .caption h2,
+    .caption p { margin: 0; font-size: 14px; font-weight: 400; }
+
+    .caption h2 { font-variant-numeric: tabular-nums; letter-spacing: .04em; }
+    .caption p { color: var(--muted); }
+
+    .tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+      margin: 12px 0 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .tag {
+      display: inline-flex;
+      align-items: baseline;
+      gap: 7px;
+      padding: 6px 10px;
+      border: 1px solid var(--rule);
+      border-radius: 999px;
+      color: var(--ink);
+      font-size: 12px;
+      line-height: 1.3;
+    }
+
+    .tag-key { color: var(--muted); font-size: 10px; }
+
+    dialog {
+      width: min(94vw, 1200px);
+      max-width: none;
+      max-height: 94dvh;
+      padding: 0;
+      overflow: visible;
+      border: 0;
+      background: transparent;
+    }
+
+    dialog::backdrop { background: rgb(16 16 15 / 88%); }
+
+    .lightbox-image {
+      display: block;
+      width: auto;
+      height: auto;
+      max-width: 94vw;
+      max-height: 88dvh;
+      margin: auto;
+      object-fit: contain;
+    }
+
+    .lightbox-caption {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: 12px;
+      color: #f3f1ec;
+      font-size: 13px;
+    }
+
+    .close {
+      position: fixed;
+      top: max(18px, env(safe-area-inset-top));
+      right: max(18px, env(safe-area-inset-right));
+      display: grid;
+      width: 42px;
+      height: 42px;
+      place-items: center;
+      border: 1px solid rgb(255 255 255 / 48%);
+      border-radius: 50%;
+      color: white;
+      background: transparent;
+      font: inherit;
+      font-size: 22px;
+      cursor: pointer;
+    }
+
+    @media (max-width: 680px) {
+      .page { padding-bottom: 44px; }
+      .masthead { min-height: 48px; }
+      .intro { padding-top: 72px; padding-bottom: 50px; }
+      h1 { font-size: clamp(42px, 12vw, 70px); }
+      .collection { grid-template-columns: 1fr; row-gap: 42px; padding-top: 24px; }
+      .caption { padding-top: 11px; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <div class="masthead" aria-hidden="true">
+      <span>ARCHIVE</span>
+      <span>01 — 05</span>
+    </div>
+
+    <header class="intro">
+      <h1>アーカイブサイト</h1>
+    </header>
+
+    <section class="collection" aria-label="資料"></section>
+  </main>
+
+  <dialog id="lightbox" aria-label="写真を拡大表示">
+    <button class="close" type="button" aria-label="閉じる">×</button>
+    <img class="lightbox-image" alt="">
+    <div class="lightbox-caption"><span class="lightbox-name"></span><span>(ここに言葉)</span></div>
+  </dialog>
+
+  <script>
+    const archiveItems = [
+      {
+        file: '01.jpg',
+        name: 'here Kyoto',
+        tags: [
+          { label: 'いつ', value: '2026年' },
+          { label: 'どこで', value: '京都市のカフェ' }
+        ]
+      },
+      {
+        file: '02.jpg',
+        name: 'charlie',
+        tags: [
+          { label: 'いつ', value: '2026年' },
+          { label: 'どこで', value: '京都市のレストラン' }
+        ]
+      },
+      {
+        file: '03.jpg',
+        name: 'らんたく',
+        tags: [
+          { label: 'いつ', value: '2026年' },
+          { label: 'どこで', value: '京都市のバー' }
+        ]
+      },
+      {
+        file: '04.jpg',
+        name: '夕焼け',
+        tags: [
+          { label: 'いつ', value: '2026年' },
+          { label: 'どこで', value: '京都芸術大学' }
+        ]
+      },
+      {
+        file: '05.jpg',
+        name: '夕焼け',
+        tags: [
+          { label: 'いつ', value: '2026年' },
+          { label: 'どこで', value: '京都芸術大学' }
+        ]
+      }
+    ];
+
+    const collection = document.querySelector('.collection');
+    const lightbox = document.querySelector('#lightbox');
+    const enlargedImage = lightbox.querySelector('.lightbox-image');
+    const enlargedName = lightbox.querySelector('.lightbox-name');
+
+    function createArchiveItem(item, index) {
+      const article = document.createElement('article');
+      article.className = 'item';
+
+      const button = document.createElement('button');
+      button.className = 'photo-button';
+      button.type = 'button';
+      button.dataset.src = `images/${item.file}`;
+      button.dataset.name = item.name;
+      button.setAttribute('aria-label', `${item.name} を拡大`);
+
+      const image = document.createElement('img');
+      image.src = button.dataset.src;
+      image.alt = item.name;
+      image.loading = index === 0 ? 'eager' : 'lazy';
+      if (index === 0) image.fetchPriority = 'high';
+      button.append(image);
+
+      const caption = document.createElement('div');
+      caption.className = 'caption';
+      const name = document.createElement('h2');
+      name.textContent = item.name;
+      const note = document.createElement('p');
+      note.textContent = '(ここに言葉)';
+      caption.append(name, note);
+
+      const tags = document.createElement('ul');
+      tags.className = 'tags';
+      tags.setAttribute('aria-label', 'タグ');
+      item.tags.forEach((tag) => {
+        const li = document.createElement('li');
+        li.className = 'tag';
+        const label = document.createElement('span');
+        label.className = 'tag-key';
+        label.textContent = tag.label;
+        const value = document.createElement('span');
+        value.textContent = tag.value;
+        li.append(label, value);
+        tags.append(li);
+      });
+      tags.hidden = item.tags.length === 0;
+
+      article.append(button, caption, tags);
+      return article;
+    }
+
+    collection.append(...archiveItems.map(createArchiveItem));
+
+    document.querySelectorAll('.photo-button').forEach((button) => {
+      button.addEventListener('click', () => {
+        enlargedImage.src = button.dataset.src;
+        enlargedImage.alt = button.dataset.name;
+        enlargedName.textContent = button.dataset.name;
+        lightbox.showModal();
+      });
+    });
+
+    lightbox.querySelector('.close').addEventListener('click', () => lightbox.close());
+    lightbox.addEventListener('click', (event) => {
+      if (event.target === lightbox) lightbox.close();
+    });
+    lightbox.addEventListener('close', () => { enlargedImage.removeAttribute('src'); });
+  </script>
+</body>
+</html>
